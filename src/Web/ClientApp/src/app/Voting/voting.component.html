@@ -1,0 +1,172 @@
+<h1>
+  Voting App
+</h1>
+
+<div class="alert alert-success" *ngIf="canVote()">
+  <p>You can cast a vote.</p>
+  <button class="btn btn-primary" title="Vote for..."
+          (click)="showNewVotingActivityModal(newVotingActivityModalTemplate)">
+    Vote
+  </button>
+</div>
+<div class="alert alert-warning" *ngIf="selectedVoter && this.selectedVoter.hasVoted">
+  <p>You have already voted!</p>
+  <button class="btn btn-warning" title="You have already voted!" disabled="disabled">
+    <s>Vote</s>
+  </button>
+</div>
+<div class="alert alert-warning" *ngIf="!selectedCandidate">
+  You must add and select candidate
+</div>
+
+<div>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="clearfix">
+        <h2 class="float-start">Voters</h2>
+        <button class="btn btn-default float-end" title="New Voter..."
+                (click)="showNewVoterModal(newVoterModalTemplate)">
+          <i class="bi bi-journal-plus"></i>
+        </button>
+      </div>
+      <ul *ngIf="voters" class="list-group">
+        <li *ngFor="let voter of voters; index as i" class="list-group-item"
+            [ngClass]="{ 'active': selectedVoter == voter }" (click)="selectedVoter = voter">
+          <div class="clearfix">
+            <div class="float-start">
+              {{ voter.name }} <div *ngIf="voter.hasVoted" class="badge rounded-pill bg-success"> {{getHasVotedMsg(voter)}} </div>
+            </div>
+            <div class="float-end text-right">
+              <span class="badge badge-light">...</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="clearfix">
+        <h2 class="float-start">Candidates</h2>
+        <button class="btn btn-default float-end" title="New Candidate..."
+                (click)="showNewCandidateModal(newCandidateModalTemplate)">
+          <i class="bi bi-journal-plus"></i>
+        </button>
+      </div>
+      <ul *ngIf="candidates" class="list-group">
+        <li *ngFor="let candidate of candidates; index as i" class="list-group-item"
+            [ngClass]="{ 'active': selectedCandidate == candidate }" (click)="selectedCandidate = candidate">
+          <div class="clearfix">
+            <div class="float-start">
+              {{ candidate.name }}
+              <div class="badge rounded-pill bg-success">{{candidate.votesCount}} </div>
+            </div>
+            <div class="float-end text-right">
+              <span class="badge badge-light">...</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="debug">
+  <pre>{{ voters | json }}</pre>
+  <pre>{{ candidates | json }}</pre>
+</div>
+
+<ng-template #newVoterModalTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">New voter</h4>
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="newVoterCancelled()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Name..." [(ngModel)]="newVoterEditor.name"
+             [ngClass]="{ 'is-invalid': newVoterEditor.error }" (keyup.enter)="addVoter()" maxlength="20" />
+      <div *ngIf="newVoterEditor.error" class="invalid-feedback">
+        {{ newVoterEditor.error }}
+      </div>
+    </div>
+    <div *ngIf="debug">
+      <pre>{{ newVoterEditor | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer clearfix">
+    <div class="float-end">
+      <button class="btn btn-default" (click)="newVoterCancelled()">Cancel</button>
+      <button class="btn btn-primary" (click)="addVoter()">Create</button>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #newCandidateModalTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">New candidate</h4>
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="newCandidateCancelled()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Name..." [(ngModel)]="newCandidateEditor.name"
+             [ngClass]="{ 'is-invalid': newCandidateEditor.error }" (keyup.enter)="addCandidate()" maxlength="20" />
+      <div *ngIf="newCandidateEditor.error" class="invalid-feedback">
+        {{ newCandidateEditor.error }}
+      </div>
+    </div>
+    <div *ngIf="debug">
+      <pre>{{ newCandidateEditor | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer clearfix">
+    <div class="float-end">
+      <button class="btn btn-default" (click)="newCandidateCancelled()">Cancel</button>
+      <button class="btn btn-primary" (click)="addCandidate()">Create</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #newVotingActivityModalTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Please confirm Your Vote</h4>
+    <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="newVotingActivityCancelled()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="voter">I am</label>
+      <input type="text" class="form-control" id="voter" [ngModel]="selectedVoter.name"
+             [ngClass]="{ 'is-invalid': newVotingActivityEditor.voterIdError }" (keyup.enter)="addVotingActivity()" maxlength="20" disabled="disabled" />
+      <div *ngIf="newVotingActivityEditor.voterIdError" class="invalid-feedback">
+        {{ newVotingActivityEditor.voterIdError }}
+      </div>
+      <label for="candidate">I vote for</label>
+      <input type="text" class="form-control" id="candidate" [(ngModel)]="selectedCandidate.name"
+             [ngClass]="{ 'is-invalid': newVotingActivityEditor.error }" (keyup.enter)="addVotingActivity()" maxlength="20" disabled="disabled" />
+
+      <div *ngIf="newVotingActivityEditor.candidatedIdError" class="invalid-feedback">
+        {{ newVotingActivityEditor.candidatedIdError }}
+      </div>
+    </div>
+    <div *ngIf="debug">
+      <pre>{{ newVotingActivityEditor | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer clearfix">
+    <div class="float-end">
+      <button class="btn btn-default" (click)="newVotingActivityCancelled()">Cancel</button>
+      <button class="btn btn-primary" (click)="addVotingActivity()">Confirm</button>
+    </div>
+  </div>
+</ng-template>
+
+

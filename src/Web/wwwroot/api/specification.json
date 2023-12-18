@@ -1,0 +1,304 @@
+{
+  "x-generator": "NSwag v14.0.0.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Voting API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/Candidates": {
+      "get": {
+        "tags": [
+          "Candidates"
+        ],
+        "operationId": "GetCandidates",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatesVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Candidates"
+        ],
+        "operationId": "CreateCandidates",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCandidateCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Voters": {
+      "get": {
+        "tags": [
+          "Voters"
+        ],
+        "operationId": "GetVoters",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VotingVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Voters"
+        ],
+        "operationId": "CreateVoters",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVoterCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/VotingActivities": {
+      "get": {
+        "tags": [
+          "VotingActivities"
+        ],
+        "operationId": "GetVotingActivity",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VotingActivitiesVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "VotingActivities"
+        ],
+        "operationId": "CreateVotingActivity",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVotingActivityCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CandidatesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CandidateDto"
+            }
+          }
+        }
+      },
+      "CandidateDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "votesCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateCandidateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          }
+        }
+      },
+      "VotingVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "voters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoterDto"
+            }
+          }
+        }
+      },
+      "VoterDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "hasVoted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateVoterCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          }
+        }
+      },
+      "VotingActivitiesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "votes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VotingActivitiesDto"
+            }
+          }
+        }
+      },
+      "VotingActivitiesDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "voter": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/VoterDto"
+              }
+            ]
+          },
+          "candidate": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CandidateDto"
+              }
+            ]
+          }
+        }
+      },
+      "CreateVotingActivityCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "voterId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "candidateId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}
