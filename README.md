@@ -13,7 +13,7 @@ FluentValidation
 NUnit, FluentAssertions...
 
  # Clean Architecture Solution
-Core is not be dependent on data access and other infrastructure concerns so those dependencies are inverted.
+Core is not dependent on data access and other infrastructure concerns so those dependencies are inverted.
 Domain layer contains enterprise wide logic and types
 Application layer contains business logic and types typically only be used within this system. This project implements CQRS (Command Query Responsibility Segregation), with each business use case represented by a single command or query.
 Presentation depend on Core. WebUI is representing the Presentation layer. Voting is implemented as SPA
