@@ -1,6 +1,29 @@
-﻿# Voting
+ # Task
+The task is to create voting app (as per mock). User should be able to add candidates and voters and then select candidate & voter in order to cast a vote. FE part can be done in any way (web, desktop or even a console, functionality matters) - for BE devs FE part should contain functionalities as visible on mock - might look completely different though - for fullstack devs The two sections can be either on single page or separate ones. Important part is to make sure that both tables and dropdowns are always up to date - eg. when casting a vote the Votes counter should be updated and 'has voted' flag for a proper voter should be changed as well.
 
-The project was generated using the [Clean.Architecture.Solution.Template](https://github.com/jasontaylordev/Voting) version 8.0.2.
+I assumed that voter can cast only one vote, but this requirement needs to be confirmed with the product owner :) I have added that functionality in order to show the behavior of fluent validation rules.
+ 
+ # Technologies
+ASP.NET Core 8
+Entity Framework Core 8
+Angular 15
+MediatR
+AutoMapper
+FluentValidation
+NUnit, FluentAssertions...
+
+ # Clean Architecture Solution
+Core is not be dependent on data access and other infrastructure concerns so those dependencies are inverted.
+Domain layer contains enterprise wide logic and types
+Application layer contains business logic and types typically only be used within this system. This project implements CQRS (Command Query Responsibility Segregation), with each business use case represented by a single command or query.
+Presentation depend on Core. WebUI is representing the Presentation layer. Voting is implemented as SPA
+Infrastructure depend on Core. Layer contains classes for accessing external resources such as file systems, web services, database eg. SQL Server, and so on. These classes should be based on interfaces defined within the Application layer. In this project I am not using own repositories for simplicity. The DbContext is a unit of work and each DbSet is a repository. In other projects I was implemening own repositories: implementation in infrastructure layer (interface in application layer).
+ 
+ # Tests
+I have added only a few just for giving a sample how they can be implemented
+
+ # Validations
+I have assumed some rules but more requirements needs to be gathered... 
 
 ## Build
 
@@ -67,5 +90,7 @@ cd .\src\Web\
 dotnet test
 ```
 
-## Help
+ # Template
+
+The project was generated using the [Clean.Architecture.Solution.Template](https://github.com/jasontaylordev/Voting) version 8.0.2.
 To learn more about the template go to the [project website](https://github.com/jasontaylordev/CleanArchitecture). Here you can find additional guidance, request new features, report a bug, and discuss the template with other users.
